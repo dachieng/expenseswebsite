@@ -1,14 +1,27 @@
-{% extends "authentication/base.html" %} {% block title %}
-<title>Register</title> {% endblock title %} {% block content %}
+{% extends "authentication/base.html" %} {% load static %}
+<title>{% block title %} Register {% endblock title %}</title>{% load crispy_forms_tags %} {% block content %}
 
 <div class="row">
-    <div class="col-md-8">
-        <div class="card">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="card mt-5">
             <div class="card-body">
-                <h2>Register Here</h2>
+                <h2 class="text-center">Register Here</h2>
+                <form action="" method="post">
+                    {% csrf_token %} {{form|crispy}}
+                    <small class="float-right my-2">SHOW</small>
+                    <div class="row mt-6 mb-2">
+                        <div class="col-md-12 ml-0">
+                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    <div class="col-md-4"></div>
+
 </div>
 
+<script src="{% static 'authentication/js/register.js' %}"></script>
 {% endblock content %}
