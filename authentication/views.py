@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+from validate_email import validate_email
 
 
 def register(request):
@@ -34,3 +35,16 @@ def validate_username(request):
             return JsonResponse({'username_exists': 'Username already Taken'}, status=409)
 
         return JsonResponse({"username_valid": True})
+
+
+@csrf_exempt
+def validate_email_view(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data['email']
+
+        if not validate_email(email):
+            return JsonResponse({'invalid_email': "Enter a valid email"})
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({"email_exists": "Email already Taken"})
+        return JsonResponse({'email_valid': True})
