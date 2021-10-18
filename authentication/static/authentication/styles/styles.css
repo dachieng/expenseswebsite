@@ -30,3 +30,13 @@ input[type=number]:focus,
         font-size: 3.5rem;
     }
 }
+
+#password-toogle {
+    cursor: pointer;
+    transition: all;
+}
+
+#password-toogle:hover {
+    transform: scale(1.2);
+    color: blue;
+}

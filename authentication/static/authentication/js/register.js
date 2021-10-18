@@ -2,12 +2,15 @@ const usernameField = document.querySelector("#id_username");
 const userDiv = document.querySelector("#div_id_username")
 const emailField = document.querySelector("#id_email");
 const emailDiv = document.querySelector("#div_id_email")
+const passwordToogle = document.querySelector("#password-toogle");
+const password = document.querySelector("#id_password1");
+const register = document.querySelector("#register")
 
 let tag = document.createElement("span");
-tag.classList.add("text-danger", "font-weight-bold")
+tag.classList.add("text-danger", "font-weight-bold");
 
 let tag2 = document.createElement("p");
-tag2.classList.add("text-danger", "font-weight-bold")
+tag2.classList.add("text-danger", "font-weight-bold");
 
 
 emailField.addEventListener("blur", (e) => {
@@ -16,7 +19,7 @@ emailField.addEventListener("blur", (e) => {
 
 
     if (emailVal.length > 0) {
-        tag2.remove()
+        tag2.remove();
         fetch("/authentication/validate-email/", {
                 body: JSON.stringify({ email: emailVal }),
                 method: "POST",
@@ -33,10 +36,12 @@ emailField.addEventListener("blur", (e) => {
                 }
                 if (data.invalid_email) {
                     emailField.classList.add("is-invalid");
-                    tag2.innerHTML = `<p>${data.invalid_email}</p>`
-                    emailDiv.appendChild(tag2)
+                    tag2.innerHTML = `<p>${data.invalid_email}</p>`;
+                    emailDiv.appendChild(tag2);
+                    register.setAttribute("disabled", "disabled")
+                } else {
+                    register.removeAttribute("disabled")
                 }
-
             });
     }
 });
@@ -72,3 +77,14 @@ usernameField.addEventListener("keyup", (e) => {
             });
     }
 });
+
+passwordToogle.addEventListener("click", () => {
+    if (passwordToogle.textContent === "SHOW") {
+        passwordToogle.textContent = "HIDE";
+        password.setAttribute("type", "text");
+    } else {
+        passwordToogle.textContent = "SHOW";
+        password.setAttribute("type", "password")
+    }
+
+})

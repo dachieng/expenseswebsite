@@ -1,0 +1,21 @@
+{% extends "authentication/base.html" %} {% block title %}
+<title>Logout</title>
+{% endblock %} {% load crispy_forms_tags %} {% block content %}
+<div class="card mt-4 p-2">
+    <div class="head">
+        <h4 class="pb-2">Logout</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div>
+                <h5>You have been logged out</h5>
+                <small>Would You Like To Login Again
+                    <a href="{% url 'login' %}">login</a>
+                </small>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

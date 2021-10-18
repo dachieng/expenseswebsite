@@ -84,6 +84,21 @@
 
             <main class="offset-md-2 col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
                 <div class="container">
+                    <div class="row mt-3 mb-3">
+                        <div class="col-md-6">
+                            {% if messages %}
+                            <ul class="messages">
+                                {% for message in messages %}
+
+                                <div class="alert alert-{{ message.tags }}">
+                                    {{ message }}
+                                </div>
+
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </div>
                     {% block content %} {% endblock content %}
                 </div>
             </main>

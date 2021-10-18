@@ -6,16 +6,59 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 from validate_email import validate_email
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.urls import reverse
+from authentication.utils import token_generator
+
+from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode  # uidb64
+# get the domain of our current site
+from django.contrib.sites.shortcuts import get_current_site
 
 
 def register(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
             username = form.cleaned_data.get("username")
+            to_email = form.cleaned_data.get("email")
+            from_email = settings.EMAIL_HOST_USER
+            subject = "Activate Your Account"
+            message = f"{username} please use this link to activate your account"
+
+            # send email configurations
+            # get the domain
+            domain = get_current_site(request).domain
+
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+            # get the relative url of the activate view
+
+            link = reverse(
+                'activate-account', kwargs={"uidb64": uidb64, "token": token_generator.make_token(user)})
+
+            activate_url = "http://"+domain+link
+
+            to_email = form.cleaned_data.get("email")
+            from_email = settings.EMAIL_HOST_USER
+            subject = "Activate Your Account"
+            message = f"{username} please use this link to activate your account {activate_url}"
+
+            email_message = EmailMessage(
+                subject,
+                message,
+                from_email,
+                [to_email],
+            )
+
+            email_message.send(fail_silently=False)
+
             messages.success(
-                request, f" {username}, your account has been created successfully")
+                request, f" {username}, your account has been created successfully. Check your email to activate account")
             return redirect("home")
     else:
         form = UserRegistrationForm()
@@ -48,3 +91,29 @@ def validate_email_view(request):
         if User.objects.filter(email=email).exists():
             return JsonResponse({"email_exists": "Email already Taken"})
         return JsonResponse({'email_valid': True})
+
+
+# activate user account
+@csrf_exempt
+def activate_account(request, uidb64, token):
+    if request.method == "GET":
+
+        try:
+            # get the uid
+            id = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=id)
+
+            if not token_generator.check_token(user, token):
+                return redirect("login"+"?message"+"account is already active")
+
+            if user.is_active:
+                return redirect("login")
+            user.is_active = True
+            user.save()
+
+            messages.success(request, "Account activated successfully")
+            return redirect("login")
+        except Exception as e:
+            pass
+
+        return redirect("home")
