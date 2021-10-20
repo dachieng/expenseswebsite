@@ -27,6 +27,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'userpreferences.apps.UserpreferencesConfig',
     'authentication.apps.AuthenticationConfig',
     'expenses.apps.ExpensesConfig',
     'django.contrib.admin',
@@ -139,6 +140,6 @@ DEFAULT_FROM_EMAIL = os.environ.get('USER_EMAIL')
 
 django_heroku.settings(locals())
 
-print(os.environ['EMAIL_PASS'])
+# print(os.environ['EMAIL_PASS'])
 
 LOGIN_REDIRECT_URL = "home"
