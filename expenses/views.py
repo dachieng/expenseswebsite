@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.core import paginator
 from django.shortcuts import redirect, render
 from expenses.forms import CreateExpense, ExpenseUpdateForm
@@ -8,15 +9,18 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from userpreferences.models import UserPreference
 
 
 @login_required
 def home(request):
     expense = Expense.objects.filter(owner=request.user)
     paginator = Paginator(expense, 2)
+    currency = UserPreference.objects.get(user=request.user).currency
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
-    return render(request, 'expenses/home.html', {'expense': expense, 'page_obj': page_obj})
+    return render(request, 'expenses/home.html', {'expense': expense, 'page_obj': page_obj, "currency": currency})
 
 
 @login_required
@@ -68,10 +72,13 @@ def delete_expense(request, pk):
     return redirect("home")
 
 
-"""def search_expense(request):
+@csrf_exempt
+def search_expense(request):
     if request.method == "POST":
         search_string = json.loads(request.body).get("searchText")
-        expenses = Expense.objects.filter(amount__starts_with=search_string, owner=request.user) | Expense.objects.filter(date__starts_with=search_string, owner=request.user) | Expense.objects.filter(
-            description__starts_with=search_string, owner=request.user) | Expense.objects.filter(category__starts_with=search_string, owner=request.user)
+        expenses = Expense.objects.filter(amount__icontains=search_string, owner=request.user) | Expense.objects.filter(date__icontains=search_string, owner=request.user) | Expense.objects.filter(
+            description__icontains=search_string, owner=request.user) | Expense.objects.filter(category__icontains=search_string, owner=request.user)
 
-        data = """
+        data = expenses.values()
+
+        return JsonResponse(list(data), safe=False)

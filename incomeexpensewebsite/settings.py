@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'userpreferences.apps.UserpreferencesConfig',
     'authentication.apps.AuthenticationConfig',
     'expenses.apps.ExpensesConfig',
+    'incomes.apps.IncomesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
