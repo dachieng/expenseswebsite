@@ -8,7 +8,7 @@
         <form action="{% url 'user-settings'%}" method="post">
             {% csrf_token %}
             <div class="input-group">
-                <select name="currency" class="custom-select" id="inputGroupSelect04">
+                <select name="currency" class="custom-select form-control" id="inputGroupSelect04">
                 {% if user_preferences.currency %}
                 <option name="currency" selected value="{{user_preferences.currency}}"
                   >{{user_preferences.currency}}</option>

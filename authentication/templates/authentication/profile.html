@@ -1,0 +1,137 @@
+{% extends "authentication/base.html" %}
+<title>
+    {% block title %} Profile {% endblock title%}
+</title> {% load crispy_forms_tags %} {% block content %}
+
+<!--
+<div class="card mt-4 p-2">
+    <div class="head">
+        <h4 class="pb-2">My Profile</h4>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-8">
+            <div class="image text-center">
+                <img src="{{user.profile.image.url}}" alt="" class="rounded-circle account-image">
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <h6>Username : </h6>
+        </div>
+        <div class="col-md-8">
+            {{user.username}}
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <h6>Email : </h6>
+        </div>
+        <div class="col-md-8">
+            {{user.email}}
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-3">
+            <h6>Description</h6>
+        </div>
+        <div class="col-md-8">
+            {{user.profile.occupation}}
+        </div>
+    </div>
+    <div class="head">
+        <h4 class="pb-2 mt-3">Update Profile</h4>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-8">
+
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %} {{u_form|crispy}} {{p_form|crispy}}
+                <div class="row">
+                    <div class="col-md-5">
+                        <button class="btn btn-sm btn-secondary" type="submit">Update</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div></div>
+-->
+
+<div class="row mt-3 mb-3">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">
+                    My <span class="text-primary">Profile</span>
+                </h4>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="image text-center">
+                    <img src="{{user.profile.image.url}}" alt="" class="rounded-circle">
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <span class="font-weight-bold">username: </span>
+
+                <span>{{user.username}}</span>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <span class="font-weight-bold">email: </span>
+
+                <span>{{user.email}}</span>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <span class="font-weight-bold">occupation: </span>
+
+                <span>{{user.profile.occupation}}</span>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <span class="font-weight-bold">age: </span>
+
+                <span>{{user.profile.age}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">
+                    <span class="text-primary">Update</span> Profile
+                </h4>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md-10 offset-md-2">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <form action="" method="post">
+                            {% csrf_token %} {{u_form|crispy}}{{p_form|crispy}}
+                            <div class="row mt-6 mb-2">
+                                <div class="col-md-12 ml-0">
+                                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

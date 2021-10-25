@@ -4,8 +4,10 @@ import os
 import json
 from django.conf import settings
 from userpreferences.models import UserPreference
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def user_settings(request):
 
     currency_data = []

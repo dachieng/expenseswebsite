@@ -40,3 +40,17 @@ input[type=number]:focus,
     transform: scale(1.2);
     color: blue;
 }
+
+small#hint_id_username.form-text.text-muted {
+    display: none !important;
+}
+
+img.rounded-circle {
+    width: 125px !important;
+    height: 125px !important;
+}
+
+img#profile.rounded-circle {
+    width: 25px !important;
+    height: 25px !important;
+}
