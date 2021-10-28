@@ -15,7 +15,7 @@ searchField.addEventListener("keyup", (e) => {
 
     if (searchValue.trim().length > 0) {
         console.log(searchValue);
-        fetch("/search_expense/", {
+        fetch("/incomes/search-income/", {
                 body: JSON.stringify({ searchText: searchValue }),
                 method: "POST",
             })
@@ -34,9 +34,8 @@ searchField.addEventListener("keyup", (e) => {
                         tbody.innerHTML += `
                         <tr>
                         <td>${item.id}</td>
-
                         <td>${item.amount}</td>
-                        <td>${item.category}</td>
+                        <td>${item.source}</td>
                         <td>${item.description}</td>
                         <td>${item.date}</td>
                         </tr>`;

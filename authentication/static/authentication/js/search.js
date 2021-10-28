@@ -34,7 +34,6 @@ searchField.addEventListener("keyup", (e) => {
                         tbody.innerHTML += `
                         <tr>
                         <td>${item.id}</td>
-
                         <td>${item.amount}</td>
                         <td>${item.category}</td>
                         <td>${item.description}</td>

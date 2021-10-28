@@ -1,0 +1,40 @@
+{% extends "authentication/base.html" %}
+<title>
+    {% block title %} Add Income {% endblock title%}
+</title>
+{% load crispy_forms_tags %} {% block content %}
+
+<div class="row">
+    <div class="col-md-10">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Incomes</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Add Income</li>
+            </ol>
+        </nav>
+
+    </div>
+</div>
+<div class="row mt-3 mb-5">
+    <div class="col-md-6 offset-md-2">
+        <div class="card mt-5">
+            <div class="card-body">
+                <h2 class="text-center">Add Income</h2>
+                <form action="" method="post">
+                    {% csrf_token %} {{form|crispy}}
+                    <div class="row mt-6 mb-2">
+                        <div class="col-md-12 ml-0">
+                            <button type="submit" class="btn btn-sm btn-primary">Add Income</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock content %}

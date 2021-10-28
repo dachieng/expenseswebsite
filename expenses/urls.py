@@ -8,4 +8,6 @@ urlpatterns = [
     path('edit_expense/<int:pk>/', views.update_expense, name="edit-expense"),
     path('expense_detail/<int:pk>/', views.detail_expense, name="detail-expense"),
     path('expense_delete/<int:pk>/', views.delete_expense, name="delete-expense"),
+    path('export-csv-expenses/', views.export_csv_expenses,
+         name="export-csv-expenses")
 ]

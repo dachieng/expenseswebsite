@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core import paginator
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from expenses.forms import CreateExpense, ExpenseUpdateForm
 from django.contrib.auth.decorators import login_required
@@ -11,6 +12,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from userpreferences.models import UserPreference
+import csv
 
 
 @login_required
@@ -49,7 +51,6 @@ def detail_expense(request, pk):
 @login_required
 def update_expense(request, pk):
     expense = get_object_or_404(Expense, pk=pk)
-    category = Category.objects.all()
     if request.method == "POST":
         form = ExpenseUpdateForm(
             request.POST, request.FILES, instance=expense)
@@ -61,15 +62,17 @@ def update_expense(request, pk):
             return redirect("home")
     else:
         form = ExpenseUpdateForm(instance=expense)
-    return render(request, 'expenses/edit_expense.html', {'form': form})
+    return render(request, 'expenses/edit_expense.html', {'form': form, 'expense': expense})
 
 
 @login_required
 def delete_expense(request, pk):
     expense = get_object_or_404(Expense, pk=pk)
-    expense.delete()
-    messages.success(request, "Expense Removed")
-    return redirect("home")
+    if request.method == "POST":
+        expense.delete()
+        messages.success(request, "Expense Removed")
+        return redirect("home")
+    return render(request, "expenses/expense_delete.html", {"expense": expense})
 
 
 @csrf_exempt
@@ -82,3 +85,20 @@ def search_expense(request):
         data = expenses.values()
 
         return JsonResponse(list(data), safe=False)
+
+
+def export_csv_expenses(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': 'attachment; filename="expenses.csv"'},)
+
+    writer = csv.writer(response)
+
+    writer.writerow(['Amount', 'Date', 'Description', 'Category'])
+
+    expenses = Expense.objects.filter(owner=request.user)
+
+    for e in expenses:
+        writer.writerow([e.amount, e.date, e.description, e.category])
+    return response

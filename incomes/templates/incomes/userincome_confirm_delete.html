@@ -1,0 +1,40 @@
+{% extends "authentication/base.html" %} {% load static %}
+<title>{% block title %} Delete Income {% endblock title %}</title>{% load crispy_forms_tags %} {% block content %}
+
+<div class="row">
+    <div class="col-md-10">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Income</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Delete Income</li>
+                <li class="breadcrumb-item active" aria-current="page">{{object.description}}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-5 mt-3">
+    <div class="col-md-6 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <h6>Are You Sure You Want To Delete Income <b><i>({{object.description}})</i></b> </h6>
+                <form action="" method="post">
+                    {% csrf_token %} {{form|crispy}}
+                    <div class="container">
+                        <div class="row mt-6 mb-2">
+                            <div class="col-md-4">
+                                <button class="btn btn-sm btn-danger" type="submit">Yes, Delete</button>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{% url 'income' %}" class="btn btn-sm btn-secondary">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

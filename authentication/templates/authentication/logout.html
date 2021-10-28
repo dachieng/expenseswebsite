@@ -1,6 +1,5 @@
-{% extends "authentication/base.html" %} {% block title %}
-<title>Logout</title>
-{% endblock %} {% load crispy_forms_tags %} {% block content %}
+{% extends "authentication/base.html" %}
+<title>{% block title %} Logout {% endblock title %}</title> {% load crispy_forms_tags %} {% block content %}
 <div class="card mt-4 p-2">
     <div class="head">
         <h4 class="pb-2">Logout</h4>
