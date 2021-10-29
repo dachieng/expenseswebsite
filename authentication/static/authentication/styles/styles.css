@@ -54,3 +54,7 @@ img#profile.rounded-circle {
     width: 25px !important;
     height: 25px !important;
 }
+
+small#hint_id_new_password1.form-text.text-muted {
+    display: none !important;
+}
