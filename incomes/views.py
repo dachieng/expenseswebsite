@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http.response import JsonResponse
 import csv
+import datetime
+from django.shortcuts import render
 
 # Create your views here.
 
@@ -17,7 +19,7 @@ class IncomeListView(ListView, LoginRequiredMixin):
     model = UserIncome
     template_name = "incomes/incomes.html"
     context_object_name = "income"
-    paginate_by = 2
+    paginate_by = 4
 
 
 class IncomeDetailListView(DetailView, LoginRequiredMixin):
@@ -93,3 +95,40 @@ def export_csv_incomes(request):
     for i in incomes:
         writer.writerow([i.amount, i.date, i.description, i.source])
     return response
+
+
+def incomes_summary(request):
+    today = datetime.date.today()
+    one_month_ago = today - datetime.timedelta(days=30)  # 1 week ago
+
+    # gte = greater than
+    incomes = UserIncome.objects.filter(owner=request.user,
+                                        date__gte=one_month_ago, date__lte=today)
+
+    # return key value pair for category and the total amount
+    source_set = {}
+
+    def get_source(income):
+        return income.source
+
+    source_list = list(set(map(get_source, incomes)))
+
+    def get_income_source_amount(source):
+        amount = 0
+
+        filtered_by_source = incomes.filter(source=source)
+
+        for item in filtered_by_source:
+            amount += item.amount
+
+        return amount
+
+    for x in incomes:
+        for y in source_list:
+            source_set[y] = get_income_source_amount(y)
+
+    return JsonResponse({"income_source_data": source_set}, safe=False)
+
+
+def income_stats(request):
+    return render(request, "incomes/income_stats.html")

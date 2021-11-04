@@ -13,12 +13,13 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from userpreferences.models import UserPreference
 import csv
+import datetime
 
 
 @login_required
 def home(request):
     expense = Expense.objects.filter(owner=request.user)
-    paginator = Paginator(expense, 2)
+    paginator = Paginator(expense, 4)
     currency = UserPreference.objects.get(user=request.user).currency
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -102,3 +103,40 @@ def export_csv_expenses(request):
     for e in expenses:
         writer.writerow([e.amount, e.date, e.description, e.category])
     return response
+
+
+def expense_summary(request):
+    today = datetime.date.today()
+    one_month_ago = today - datetime.timedelta(days=30)  # 1 week ago
+
+    # gte = greater than
+    expenses = Expense.objects.filter(owner=request.user,
+                                      date__gte=one_month_ago, date__lte=today)
+
+    # return key value pair for category and the total amount
+    category_set = {}
+
+    def get_category(expense):
+        return expense.category
+
+    category_list = list(set(map(get_category, expenses)))
+
+    def get_expense_category_amount(category):
+        amount = 0
+
+        filtered_by_category = expenses.filter(category=category)
+
+        for item in filtered_by_category:
+            amount += item.amount
+
+        return amount
+
+    for x in expenses:
+        for y in category_list:
+            category_set[y] = get_expense_category_amount(y)
+
+    return JsonResponse({"expense_category_data": category_set}, safe=False)
+
+
+def expense_stats(request):
+    return render(request, "expenses/expenses_stats.html")

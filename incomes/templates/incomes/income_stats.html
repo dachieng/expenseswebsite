@@ -1,0 +1,35 @@
+{% extends 'authentication/base.html' %} {% load static %}
+<title>{% block title %}Incomes Summary{% endblock title%}</title>
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-10">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Incomes</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Summary</li>
+            </ol>
+        </nav>
+
+    </div>
+</div>
+
+<div class="row mt-3 mb-4">
+    <div class="col-md-10">
+        <div class="row">
+            <div class="col-md-6">
+                <canvas id="myChart" width="300" height="300"></canvas>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="{% static 'authentication/js/stats_income.js' %}"></script>
+
+
+{% endblock content %}
