@@ -37,7 +37,8 @@
 
 <div class="row mt-3 mb-2">
     <div class="col"><a href="{% url 'export-csv-incomes' %}" class="btn btn-sm btn-primary">CSV</a></div>
-    <div class="col"><a href="" class="btn btn-sm btn-success">PDF</a></div>
+    <div class="col"><a href="{% url 'export-excel-incomes' %}" class="btn btn-sm btn-dark">EXCEL</a></div>
+    <div class="col"><a href="{% url 'export_pdf_incomes' %}" class="btn btn-sm btn-success">PDF</a></div>
 </div>
 
 <div class="row mt-3 data-table">

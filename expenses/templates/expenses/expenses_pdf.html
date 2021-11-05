@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses Pdf</title>
+</head>
+
+<style>
+    @page {
+        size: "A4";
+        margin: 2.5cm 1.5cm;
+        @top-center {
+            content: "ExpecTra"
+        }
+        @bottom-right {
+            content: "Page " counter(page) " of " counter(pages);
+        }
+    }
+    
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 4px;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+</style>
+
+<body>
+    <h2>Expenses Summary</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in expenses %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{e.amount}}</td>
+                <td>{{e.date}}</td>
+                <td>{{e.description}}</td>
+                <td>{{e.category}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>total</td>
+                <td>{{total}}</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

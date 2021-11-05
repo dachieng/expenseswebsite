@@ -14,6 +14,11 @@ from django.views.decorators.csrf import csrf_exempt
 from userpreferences.models import UserPreference
 import csv
 import datetime
+import xlwt
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+from django.db.models import Sum
 
 
 @login_required
@@ -140,3 +145,64 @@ def expense_summary(request):
 
 def expense_stats(request):
     return render(request, "expenses/expenses_stats.html")
+
+
+def export_excel_expenses(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="expense_summary.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Incomes Summary')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Amount', 'Date', 'Description', 'Category']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    rows = Expense.objects.filter(owner=request.user).values_list(
+        'amount', 'date', 'description', 'category')
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
+
+
+def export_pdf_expenses(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; attachment; filename="expenses.pdf"'
+    response['Content-Transfer-Encoding'] = 'binary'
+
+    expenses = Expense.objects.filter(owner=request.user)
+
+    sum = expenses.aggregate(Sum('amount'))
+
+    html_string = render_to_string(
+        "expenses/expenses_pdf.html", {'expenses': expenses, 'total': sum['amount__sum']})
+
+    html = HTML(string=html_string)
+
+    result = html.write_pdf()
+
+    # preview the pdf in memory before printing it
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+
+        output.flush()
+
+        output = open(output.name, 'rb')
+
+        response.write(output.read())
+
+    return response

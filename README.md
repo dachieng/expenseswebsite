@@ -11,3 +11,4 @@
 7. Data Visualization Using Chart.js
 8. Download data in pdf,excel or csv formats
 9. Django signals for user profile.
+10. Password Reset
